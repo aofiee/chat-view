@@ -333,9 +333,7 @@ export default function IndividualChat({
   if (!isOpen) return null;
 
   return (
-    <div className={`fixed inset-y-0 right-0 w-full lg:inset-0 bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-50 ${
-      isOpen ? 'translate-x-0' : 'translate-x-full'
-    }`}>
+    <div className="h-full bg-white flex flex-col">
       {/* Header */}
       <div className="bg-white border-b border-gray-200 p-4 shadow-sm">
         <div className="flex items-center gap-3">
@@ -381,7 +379,7 @@ export default function IndividualChat({
       {/* Messages container */}
       <div
         ref={containerRef}
-        className="flex-1 overflow-y-auto p-4 h-[calc(100vh-80px)] bg-gray-50"
+        className="flex-1 overflow-y-auto p-4 bg-gray-50"
       >
         {/* Loading indicator at top for loading more history */}
         {loading && !isInitialLoad && messages.length > 0 && (

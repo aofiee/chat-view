@@ -66,21 +66,24 @@ function HomeContent() {
           activeMenu={activeMenu} 
           onMenuChange={setActiveMenu} 
         />
-        <div className="flex-1 lg:ml-0">
-          <ChatList 
-            activeMenu={activeMenu} 
-            onChatItemClick={handleChatItemClick}
-          />
-        </div>
         
-        {/* Individual Chat Overlay */}
-        <IndividualChat
-          userId={individualChat.userId}
-          userName={individualChat.userName}
-          userPhoto={individualChat.userPhoto}
-          isOpen={individualChat.isOpen}
-          onClose={handleCloseIndividualChat}
-        />
+        {/* Main Content Area - Show ChatList or IndividualChat */}
+        <div className="flex-1 lg:ml-0">
+          {individualChat.isOpen ? (
+            <IndividualChat
+              userId={individualChat.userId}
+              userName={individualChat.userName}
+              userPhoto={individualChat.userPhoto}
+              isOpen={individualChat.isOpen}
+              onClose={handleCloseIndividualChat}
+            />
+          ) : (
+            <ChatList 
+              activeMenu={activeMenu} 
+              onChatItemClick={handleChatItemClick}
+            />
+          )}
+        </div>
       </div>
     </ProtectedRoute>
   );
