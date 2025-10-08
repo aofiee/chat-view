@@ -41,8 +41,12 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
       return null;
     }
 
+    // Use content.payload if available, otherwise fallback to direct content properties
+    const displayContent = content.payload || content;
+    const contentType = displayContent.type || content.type;
+
     // Handle single content object
-    switch (content.type) {
+    switch (contentType) {
       case 'text':
         return (
           <div className={`p-3 rounded-2xl max-w-xs break-words ${
@@ -50,7 +54,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
               ? 'bg-blue-500 text-white'
               : 'bg-gray-200 text-gray-900'
           }`}>
-				<p className="text-sm">{content.text}</p>
+				<p className="text-sm">{displayContent.text || content.text}</p>
           </div>
         );
 
@@ -58,7 +62,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         return (
           <div className="rounded-2xl overflow-hidden max-w-xs">
             <Image
-              src={content.previewImageUrl || ''}
+              src={displayContent.previewImageUrl || content.previewImageUrl || ''}
               alt="Image message"
               width={200}
               height={200}
@@ -72,8 +76,8 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
         return (
           <div className="rounded-2xl overflow-hidden max-w-xs">
             <video
-              src={content.originalContentUrl}
-              poster={content.previewImageUrl}
+              src={displayContent.originalContentUrl || content.originalContentUrl}
+              poster={displayContent.previewImageUrl || content.previewImageUrl}
               controls
               className="w-full h-auto object-cover max-w-[300px]"
               preload="metadata"
@@ -90,7 +94,7 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
               ? 'bg-blue-100 text-blue-800'
               : 'bg-gray-100 text-gray-700'
           }`}>
-            <p className="text-sm">{content.altText}</p>
+            <p className="text-sm">{displayContent.altText || content.altText}</p>
           </div>
         );
 
@@ -101,12 +105,12 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
               ? 'bg-blue-100 text-blue-800'
               : 'bg-blue-50 text-blue-700'
           }`}>
-            <p className="text-sm">{content.altText}</p>
+            <p className="text-sm">{displayContent.altText || content.altText}</p>
           </div>
         );
 
       case 'sticker':
-        const stickerUrl = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${content.stickerId}/android/sticker.png`;
+        const stickerUrl = `https://stickershop.line-scdn.net/stickershop/v1/sticker/${displayContent.stickerId || content.stickerId}/android/sticker.png`;
         return (
           <div className="rounded-2xl overflow-hidden">
             <Image

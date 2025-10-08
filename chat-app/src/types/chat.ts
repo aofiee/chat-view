@@ -37,6 +37,20 @@ export interface ChatMessage {
 
 export interface MessageContent {
   text?: string;
+  payload?: {
+    text?: string;
+    type: string;
+  };
+  stage?: {
+    chat?: {
+      type: number;
+      content: string;
+      category: string;
+      packageId?: string;
+      stickerId?: string;
+    };
+    type: number;
+  };
   type: 'text' | 'image' | 'video' | 'flex' | 'sticker' | 'imagemap';
   altText?: string;
   contents?: any;

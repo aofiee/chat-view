@@ -53,7 +53,14 @@ export default function IndividualChat({
         photo: wsData.photo || '',
         type: wsData.type || '0',
         message: wsData.message || '',
-        content: wsData.content || { type: 'text', text: wsData.message || '' },
+        content: wsData.content || { 
+          type: 'text', 
+          payload: { 
+            text: wsData.message || '', 
+            type: 'text' 
+          },
+          text: wsData.message || '' 
+        },
         isPinned: wsData.isPinned || false,
         isActive: wsData.isActive || false,
         isUserBlock: wsData.isUserBlock || false,

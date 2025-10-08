@@ -184,7 +184,20 @@ export async function fetchIndividualChatData(
         type: "0",
         message: "",
         content: {
-          text: "Welcome to our support chat! How can I help you today?",
+          stage: {
+            chat: {
+              type: 0,
+              content: "Welcome to our support chat! How can I help you today?",
+              category: "Info",
+              packageId: null,
+              stickerId: null
+            },
+            type: 1
+          },
+          payload: {
+            text: "Welcome to our support chat! How can I help you today?",
+            type: "text"
+          },
           type: "text" as const
         },
         isPinned: false,
@@ -202,7 +215,20 @@ export async function fetchIndividualChatData(
         type: "0",
         message: "",
         content: {
-          text: "Hi! I'm having some issues with my account.",
+          stage: {
+            chat: {
+              type: 0,
+              content: "Hi! I'm having some issues with my account.",
+              category: "Info",
+              packageId: null,
+              stickerId: null
+            },
+            type: 1
+          },
+          payload: {
+            text: "Hi! I'm having some issues with my account.",
+            type: "text"
+          },
           type: "text" as const
         },
         isPinned: false,
