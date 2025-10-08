@@ -68,6 +68,21 @@ export default function MessageBubble({ message }: MessageBubbleProps) {
           </div>
         );
 
+      case 'video':
+        return (
+          <div className="rounded-2xl overflow-hidden max-w-xs">
+            <video
+              src={content.originalContentUrl}
+              poster={content.previewImageUrl}
+              controls
+              className="w-full h-auto object-cover max-w-[300px]"
+              preload="metadata"
+            >
+              Your browser does not support the video tag.
+            </video>
+          </div>
+        );
+
       case 'flex':
         return (
           <div className={`p-3 rounded-2xl max-w-xs break-words ${

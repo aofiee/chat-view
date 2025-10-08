@@ -37,7 +37,7 @@ export interface ChatMessage {
 
 export interface MessageContent {
   text?: string;
-  type: 'text' | 'image' | 'flex' | 'sticker' | 'imagemap';
+  type: 'text' | 'image' | 'video' | 'flex' | 'sticker' | 'imagemap';
   altText?: string;
   contents?: any;
   previewImageUrl?: string;
