@@ -86,7 +86,8 @@ export function useIndividualWebSocket(options: UseIndividualWebSocketOptions) {
       return;
     }
 
-    const wsUrl = `ws://localhost:8080/v1/api/ws/individual?owner=${ownerId}&userId=${targetUserId}`;
+    const wsBaseUrl = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080/v1/api';
+    const wsUrl = `${wsBaseUrl}/ws/individual?owner=${ownerId}&userId=${targetUserId}`;
     console.log('Attempting to connect to Individual WebSocket:', wsUrl);
     console.log(`Individual WebSocket: owner=${ownerId}, targetUser=${targetUserId}`);
     

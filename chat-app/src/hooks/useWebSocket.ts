@@ -86,7 +86,8 @@ export function useWebSocket(options: UseWebSocketOptions) {
       return;
     }
 
-    const wsUrl = `ws://localhost:8080/v1/api/ws/case?owner=${userId}&category=${category}`;
+    const wsBaseUrl = process.env.NEXT_PUBLIC_WS_BASE_URL || 'ws://localhost:8080/v1/api';
+    const wsUrl = `${wsBaseUrl}/ws/case?owner=${userId}&category=${category}`;
     console.log('Attempting to connect to WebSocket:', wsUrl);
     console.log(`WebSocket category switching: ${category}`);
     

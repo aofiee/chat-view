@@ -1,7 +1,7 @@
 import { ChatResponse, ApiRequest, MenuType, IndividualChatResponse, IndividualChatRequest } from '@/types/chat';
 import { authStorage, refreshAccessToken, isTokenExpired } from '@/lib/auth';
 
-const BASE_URL = 'http://127.0.0.1:8080/v1/api/case';
+const BASE_URL = `${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/v1/api'}/case`;
 
 const API_ENDPOINTS = {
   all: `${BASE_URL}/all`,

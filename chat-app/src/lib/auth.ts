@@ -1,5 +1,8 @@
 import { OAuthCallbackResponse, GoogleSigninResponse, RefreshTokenResponse, AuthUser } from '@/types/auth';
 
+// API base URL configuration
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8080/v1/api';
+
 // Google OAuth2 configuration
 export const GOOGLE_CLIENT_ID = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID || '';
 export const GOOGLE_REDIRECT_URI = 'http://localhost:3000/auth/callback';
@@ -62,7 +65,7 @@ export function validateOAuthState(receivedState: string): boolean {
 // Step 1: Initial Google signin request
 export async function initiateGoogleSignin(): Promise<GoogleSigninResponse> {
   try {
-    const response = await fetch('http://localhost:8080/v1/api/auth/oauth2/signin', {
+    const response = await fetch(`${API_BASE_URL}/auth/oauth2/signin`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -109,7 +112,7 @@ export async function sendOAuthCallback(code: string, state: string): Promise<OA
       throw new Error('Invalid or expired OAuth state. Please try signing in again.');
     }
 
-    const response = await fetch('http://localhost:8080/v1/api/auth/oauth2/callback', {
+    const response = await fetch(`${API_BASE_URL}/auth/oauth2/callback`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -163,7 +166,7 @@ export async function sendOAuthCallback(code: string, state: string): Promise<OA
 // Refresh access token
 export async function refreshAccessToken(refreshToken: string): Promise<RefreshTokenResponse> {
   try {
-    const response = await fetch('http://localhost:8080/v1/api/auth/line/refresh-token', {
+    const response = await fetch(`${API_BASE_URL}/auth/line/refresh-token`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
