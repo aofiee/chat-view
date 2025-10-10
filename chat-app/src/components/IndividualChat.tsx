@@ -69,30 +69,31 @@ export default function IndividualChat({
         updatedAt: wsData.updatedAt || new Date().toISOString()
       };
 
-      // Check if message already exists in DOM
-      const existingElement = document.getElementById(wsData.messageId);
-      
-      if (existingElement) {
-        // Update existing message in state
-        console.log('Updating existing message:', wsData.messageId);
-        setMessages(prevMessages => 
-          prevMessages.map(msg => 
-            msg.messageId === wsData.messageId ? newMessage : msg
-          )
-        );
-      } else {
-        // Append new message to the bottom
-        console.log('Adding new message to chat:', wsData.messageId);
-        setMessages(prevMessages => [...prevMessages, newMessage]);
+      // Check if message already exists in state (better than DOM check)
+      setMessages(prevMessages => {
+        const existingMessageIndex = prevMessages.findIndex(msg => msg.messageId === wsData.messageId);
         
-        // Auto-scroll to bottom for new messages
-        setTimeout(() => {
-          if (messagesEndRef.current) {
-            console.log(`[IndividualChat] Programmatic scroll to bottom for new WebSocket message`);
-            messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
-          }
-        }, 100);
-      }
+        if (existingMessageIndex !== -1) {
+          // Update existing message in state
+          console.log('Updating existing message:', wsData.messageId);
+          const updatedMessages = [...prevMessages];
+          updatedMessages[existingMessageIndex] = newMessage;
+          return updatedMessages;
+        } else {
+          // Append new message to the bottom
+          console.log('Adding new message to chat:', wsData.messageId);
+          
+          // Auto-scroll to bottom for new messages
+          setTimeout(() => {
+            if (messagesEndRef.current) {
+              console.log(`[IndividualChat] Programmatic scroll to bottom for new WebSocket message`);
+              messagesEndRef.current.scrollIntoView({ behavior: 'smooth' });
+            }
+          }, 100);
+          
+          return [...prevMessages, newMessage];
+        }
+      });
     } else {
       console.log('WebSocket data does not match expected message structure:', wsData);
     }
@@ -184,8 +185,11 @@ export default function IndividualChat({
           if (reset) {
             return response.data;
           } else {
-            // Prepend older messages to the beginning of the array
-            return [...response.data, ...prev];
+            // Prepend older messages to the beginning of the array, but avoid duplicates
+            const existingMessageIds = new Set(prev.map(msg => msg.messageId));
+            const newMessages = response.data.filter(msg => !existingMessageIds.has(msg.messageId));
+            console.log(`[IndividualChat] Filtered ${response.data.length - newMessages.length} duplicate messages from API response`);
+            return [...newMessages, ...prev];
           }
         });
         setHasMore(response.hasMoreChat);
@@ -304,7 +308,13 @@ export default function IndividualChat({
           console.log(`[IndividualChat] More messages API response: ${response.data.length} messages, hasMore=${response.hasMoreChat}`);
 
           if (response.data && response.data.length > 0) {
-            setMessages(prev => [...response.data, ...prev]);
+            // Filter out any duplicates that might exist in state from WebSocket
+            setMessages(prevMessages => {
+              const existingMessageIds = new Set(prevMessages.map(msg => msg.messageId));
+              const newMessages = response.data.filter(msg => !existingMessageIds.has(msg.messageId));
+              console.log(`[IndividualChat] Filtered ${response.data.length - newMessages.length} duplicate messages from more messages API response`);
+              return [...newMessages, ...prevMessages];
+            });
             setHasMore(response.hasMoreChat);
             setOffset(prev => prev + limit);
           } else {
@@ -449,9 +459,9 @@ export default function IndividualChat({
 
         {/* Messages - displayed in chronological order (oldest to newest) */}
         <div className="space-y-1">
-          {messages.map((message, index) => (
+          {messages.map((message) => (
             <MessageBubble
-              key={`${message.userId}-${index}-${message.createdAt}`}
+              key={message.messageId}
               message={message}
             />
           ))}
